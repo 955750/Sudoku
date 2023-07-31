@@ -1,18 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/sudoku_grid"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="2dp"
+    android:layout_marginEnd="2dp"
+    android:orientation="vertical"
+    android:layout_gravity="center"
+    android:background="@color/black" />
+
+
+<!--
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".solver.SolverFragment">
 
+    <TextView
+        android:id="@+id/chosen_square_textview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:gravity="center"
+        tools:text="Chosen square = (5,4)"
+        android:textSize="40sp"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <GridLayout
+        android:id="@+id/sudoku_grid"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
         android:background="@color/black"
         android:rowCount="3"
-        android:columnCount="3">
+        android:columnCount="3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <include
             android:id="@+id/square_1"
@@ -93,4 +119,4 @@
             layout="@layout/square_layout" />
 
     </GridLayout>
-</FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>-->

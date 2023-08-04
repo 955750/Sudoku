@@ -6,10 +6,23 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class SolverViewModel : ViewModel() {
+
     private val _lastSelectedLastSquareCoordinates: MutableLiveData<Pair<Int, Int>> =
         MutableLiveData(Pair(-1, -1))
     val lastSelectedSquareCoordinates: LiveData<Pair<Int, Int>> =
         _lastSelectedLastSquareCoordinates
+
+    val sudokuNumberGrid: List<List<Int>> = listOf(
+        listOf(1, 2, 3, 4, 5, 6, 7, 8, 9),
+        listOf(1, 2, 3, 4, 5, 6, 7, 8, 9),
+        listOf(1, 2, 3, 4, 5, 6, 7, 8, 9),
+        listOf(1, 2, 3, 4, 5, 6, 7, 8, 9),
+        listOf(1, 2, 3, 4, 5, 6, 7, 8, 9),
+        listOf(1, 2, 3, 4, 5, 6, 7, 8, 9),
+        listOf(1, 2, 3, 4, 5, 6, 7, 8, 9),
+        listOf(1, 2, 3, 4, 5, 6, 7, 8, 9),
+        listOf(1, 2, 3, 4, 5, 6, 7, 8, 9)
+    )
 
     fun updateLastSelectedSquareCoordinates(row: Int, column: Int) {
         _lastSelectedLastSquareCoordinates.value = Pair(row, column)

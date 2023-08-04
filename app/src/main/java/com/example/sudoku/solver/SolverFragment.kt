@@ -111,49 +111,6 @@ class SolverFragment : Fragment() {
         Log.d(TAG, "row = $selectedRowIndex, column = $selectedColumnIndex")
     }
 
-    private fun setNotSelectedNumberSquareColor(
-        numberSquare: TextView,
-        selectedRowIndex: Int,
-        selectedColumnIndex: Int
-    ) {
-        when (selectedColumnIndex) {
-            0, 3, 6 -> {
-                when (selectedRowIndex) {
-                    0, 3, 6 -> numberSquare.background = ContextCompat
-                        .getDrawable(requireContext(), R.drawable.num_sq_top_left_bg)
-                    1, 2, 4, 5, 7 -> numberSquare.background = ContextCompat
-                        .getDrawable(requireContext(),
-                            R.drawable.num_sq_middle_col__right_col__top_bg)
-                    8 -> numberSquare.background = ContextCompat
-                        .getDrawable(requireContext(), R.drawable.num_sq_bottom_left_bg)
-                }
-            }
-            1, 2, 4, 5, 7 -> {
-                when (selectedRowIndex) {
-                    0, 3, 6 -> numberSquare.background = ContextCompat
-                        .getDrawable(requireContext(), R.drawable.num_sq_top__middle_right_bg)
-                    1, 2, 4, 5, 7 -> numberSquare.background = ContextCompat
-                        .getDrawable(requireContext(),
-                            R.drawable.num_sq_middle_col__right_col_bg)
-                    8 -> numberSquare.background = ContextCompat
-                        .getDrawable(requireContext(),
-                            R.drawable.num_sq_middle_col__right_col__bottom_bg)
-                }
-            }
-            8 -> {
-                when (selectedRowIndex) {
-                    0, 3, 6 ->  numberSquare.background = ContextCompat
-                        .getDrawable(requireContext(), R.drawable.num_sq_top_right_bg)
-                    1, 2, 4, 5, 7 -> numberSquare.background = ContextCompat
-                        .getDrawable(requireContext(),
-                            R.drawable.num_sq_middle_col__right_col_right_bg)
-                    8 -> numberSquare.background = ContextCompat
-                        .getDrawable(requireContext(), R.drawable.num_sq_bottom_right_bg)
-                }
-            }
-        }
-    }
-
     private fun setSelectedNumberSquareColor(
         numberSquare: TextView,
         selectedRowIndex: Int,
@@ -197,96 +154,89 @@ class SolverFragment : Fragment() {
         }
     }
 
-    private fun setAffectedNumberSquaresColor(
+    private fun setNotSelectedNumberSquareColor(
+        numberSquare: TextView,
         selectedRowIndex: Int,
         selectedColumnIndex: Int
     ) {
-        setAffectedRow(
-            selectedRowIndex = selectedRowIndex,
-            selectedColumnIndex = selectedColumnIndex
-        )
-        setAffectedColumn(
-            selectedRowIndex = selectedRowIndex,
-            selectedColumnIndex = selectedColumnIndex
-        )
-        setAffectedSquare(
-            selectedRowIndex = selectedRowIndex,
-            selectedColumnIndex = selectedColumnIndex
-        )
-    }
-
-    private fun setAffectedRow(
-        selectedRowIndex: Int,
-        selectedColumnIndex: Int
-    ) {
-        val selectedRow = binding.sudokuGrid.getChildAt(selectedRowIndex) as LinearLayout
-        for (columnIndex in 0..8) {
-            if (columnIndex != selectedColumnIndex) {
-                val currentAffectedNumberSquare = selectedRow.getChildAt(columnIndex) as TextView
-                setAffectedNumberSquareColor(
-                    numberSquare = currentAffectedNumberSquare,
-                    rowIndex = selectedRowIndex,
-                    columnIndex = columnIndex
-                )
+        when (selectedColumnIndex) {
+            0, 3, 6 -> {
+                when (selectedRowIndex) {
+                    0, 3, 6 -> numberSquare.background = ContextCompat
+                        .getDrawable(requireContext(), R.drawable.num_sq_top_left_bg)
+                    1, 2, 4, 5, 7 -> numberSquare.background = ContextCompat
+                        .getDrawable(requireContext(),
+                            R.drawable.num_sq_middle_col__right_col__top_bg)
+                    8 -> numberSquare.background = ContextCompat
+                        .getDrawable(requireContext(), R.drawable.num_sq_bottom_left_bg)
+                }
             }
-        }
-    }
-
-    private fun setAffectedColumn(
-        selectedRowIndex: Int,
-        selectedColumnIndex: Int
-    ) {
-        for (rowIndex in 0..8) {
-            if (rowIndex != selectedRowIndex) {
-                val currentRow = binding.sudokuGrid.getChildAt(rowIndex) as LinearLayout
-                val currentAffectedNumberSquare = currentRow.getChildAt(selectedColumnIndex)
-                    as TextView
-                setAffectedNumberSquareColor(
-                    numberSquare = currentAffectedNumberSquare,
-                    rowIndex = rowIndex,
-                    columnIndex = selectedColumnIndex
-                )
+            1, 2, 4, 5, 7 -> {
+                when (selectedRowIndex) {
+                    0, 3, 6 -> numberSquare.background = ContextCompat
+                        .getDrawable(requireContext(), R.drawable.num_sq_top__middle_right_bg)
+                    1, 2, 4, 5, 7 -> numberSquare.background = ContextCompat
+                        .getDrawable(requireContext(),
+                            R.drawable.num_sq_middle_col__right_col_bg)
+                    8 -> numberSquare.background = ContextCompat
+                        .getDrawable(requireContext(),
+                            R.drawable.num_sq_middle_col__right_col__bottom_bg)
+                }
             }
-        }
-    }
-
-    private fun setAffectedSquare(
-        selectedRowIndex: Int,
-        selectedColumnIndex: Int
-    ) {
-        val affectedRowIndexesRange = getAffectedIndexRangeInSquare(
-            selectedRowOrColumnIndex = selectedRowIndex
-        )
-        val affectedColumnIndexesRange = getAffectedIndexRangeInSquare(
-            selectedRowOrColumnIndex = selectedColumnIndex
-        )
-        for (rowIndex in affectedRowIndexesRange.first..affectedRowIndexesRange.second) {
-            for (columnIndex in
-                affectedColumnIndexesRange.first..affectedColumnIndexesRange.second
-            ) {
-                if (rowIndex != selectedRowIndex && columnIndex != selectedColumnIndex) {
-                    val currentRow = binding.sudokuGrid.getChildAt(rowIndex) as LinearLayout
-                    val currentAffectedNumberSquare = currentRow.getChildAt(columnIndex)
-                        as TextView
-                    setAffectedNumberSquareColor(
-                        numberSquare = currentAffectedNumberSquare,
-                        rowIndex = rowIndex,
-                        columnIndex = columnIndex
-                    )
+            8 -> {
+                when (selectedRowIndex) {
+                    0, 3, 6 ->  numberSquare.background = ContextCompat
+                        .getDrawable(requireContext(), R.drawable.num_sq_top_right_bg)
+                    1, 2, 4, 5, 7 -> numberSquare.background = ContextCompat
+                        .getDrawable(requireContext(),
+                            R.drawable.num_sq_middle_col__right_col_right_bg)
+                    8 -> numberSquare.background = ContextCompat
+                        .getDrawable(requireContext(), R.drawable.num_sq_bottom_right_bg)
                 }
             }
         }
     }
 
-    private fun getAffectedIndexRangeInSquare(
-        selectedRowOrColumnIndex: Int,
-    ): Pair<Int, Int> {
-        return when (selectedRowOrColumnIndex) {
-            0, 1, 2 -> Pair(0, 2)
-            3, 4, 5 -> Pair(3, 5)
-            6, 7, 8 -> Pair(6, 8)
-            else -> Pair(-1, -1)
-        }
+    private fun setAffectedNumberSquaresColor(
+        selectedRowIndex: Int,
+        selectedColumnIndex: Int
+    ) {
+        alterAffectedRow(
+            selectedRowIndex = selectedRowIndex,
+            selectedColumnIndex = selectedColumnIndex,
+            alterAffectedRowOperation = AlterAffectedRowOperation.SET_AFFECTED_ROW
+        )
+        alterAffectedColumn(
+            selectedRowIndex = selectedRowIndex,
+            selectedColumnIndex = selectedColumnIndex,
+            alterAffectedColumnOperation = AlterAffectedColumnOperation.SET_AFFECTED_COLUMN
+        )
+        alterAffectedSquare(
+            selectedRowIndex = selectedRowIndex,
+            selectedColumnIndex = selectedColumnIndex,
+            alterAffectedSquareOperation = AlterAffectedSquareOperation.SET_AFFECTED_SQUARE
+        )
+    }
+
+    private fun unsetAffectedNumberSquaresColor(
+        selectedRowIndex: Int,
+        selectedColumnIndex: Int
+    ) {
+        alterAffectedRow(
+            selectedRowIndex = selectedRowIndex,
+            selectedColumnIndex = selectedColumnIndex,
+            alterAffectedRowOperation = AlterAffectedRowOperation.UNSET_AFFECTED_ROW
+        )
+        alterAffectedColumn(
+            selectedRowIndex = selectedRowIndex,
+            selectedColumnIndex = selectedColumnIndex,
+            alterAffectedColumnOperation = AlterAffectedColumnOperation.UNSET_AFFECTED_COLUMN
+        )
+        alterAffectedSquare(
+            selectedRowIndex = selectedRowIndex,
+            selectedColumnIndex = selectedColumnIndex,
+            alterAffectedSquareOperation = AlterAffectedSquareOperation.UNSET_AFFECTED_SQUARE
+        )
     }
 
     private fun setAffectedNumberSquareColor(
@@ -332,64 +282,69 @@ class SolverFragment : Fragment() {
         }
     }
 
-    private fun unsetAffectedNumberSquaresColor(
+    private fun alterAffectedRow(
         selectedRowIndex: Int,
-        selectedColumnIndex: Int
+        selectedColumnIndex: Int,
+        alterAffectedRowOperation: AlterAffectedRowOperation
     ) {
-        unsetAffectedRow(
-            selectedRowIndex = selectedRowIndex,
-            selectedColumnIndex = selectedColumnIndex
-        )
-        unsetAffectedColumn(
-            selectedRowIndex = selectedRowIndex,
-            selectedColumnIndex = selectedColumnIndex
-        )
-        unsetAffectedSquare(
-            selectedRowIndex = selectedRowIndex,
-            selectedColumnIndex = selectedColumnIndex
-        )
-    }
-
-    private fun unsetAffectedRow(
-        selectedRowIndex: Int,
-        selectedColumnIndex: Int
-    ) {
-        val previousSelectedRow = binding.sudokuGrid.getChildAt(selectedRowIndex)
-            as LinearLayout
+        val selectedRow = binding.sudokuGrid.getChildAt(selectedRowIndex) as LinearLayout
         for (columnIndex in 0..8) {
-            val currentNotAffectedNumberSquare = previousSelectedRow.getChildAt(columnIndex)
-                as TextView
             if (columnIndex != selectedColumnIndex) {
-                setNotSelectedNumberSquareColor(
-                    numberSquare = currentNotAffectedNumberSquare,
-                    selectedRowIndex = selectedRowIndex,
-                    selectedColumnIndex = columnIndex
-                )
+                val currentAffectedNumberSquare = selectedRow.getChildAt(columnIndex) as TextView
+                when (alterAffectedRowOperation) {
+                    AlterAffectedRowOperation.SET_AFFECTED_ROW -> {
+                        setAffectedNumberSquareColor(
+                            numberSquare = currentAffectedNumberSquare,
+                            rowIndex = selectedRowIndex,
+                            columnIndex = columnIndex
+                        )
+                    }
+                    AlterAffectedRowOperation.UNSET_AFFECTED_ROW -> {
+                        setNotSelectedNumberSquareColor(
+                            numberSquare = currentAffectedNumberSquare,
+                            selectedRowIndex = selectedRowIndex,
+                            selectedColumnIndex = columnIndex
+                        )
+                    }
+                }
             }
         }
     }
 
-    private fun unsetAffectedColumn(
+    private fun alterAffectedColumn(
         selectedRowIndex: Int,
-        selectedColumnIndex: Int
+        selectedColumnIndex: Int,
+        alterAffectedColumnOperation: AlterAffectedColumnOperation
     ) {
         for (rowIndex in 0..8) {
             if (rowIndex != selectedRowIndex) {
                 val currentRow = binding.sudokuGrid.getChildAt(rowIndex) as LinearLayout
                 val currentAffectedNumberSquare = currentRow.getChildAt(selectedColumnIndex)
                     as TextView
-                setNotSelectedNumberSquareColor(
-                    numberSquare = currentAffectedNumberSquare,
-                    selectedRowIndex = rowIndex,
-                    selectedColumnIndex = selectedColumnIndex
-                )
+                when (alterAffectedColumnOperation) {
+                    AlterAffectedColumnOperation.SET_AFFECTED_COLUMN -> {
+                        setAffectedNumberSquareColor(
+                            numberSquare = currentAffectedNumberSquare,
+                            rowIndex = rowIndex,
+                            columnIndex = selectedColumnIndex
+                        )
+                    }
+                    AlterAffectedColumnOperation.UNSET_AFFECTED_COLUMN -> {
+                        setNotSelectedNumberSquareColor(
+                            numberSquare = currentAffectedNumberSquare,
+                            selectedRowIndex = rowIndex,
+                            selectedColumnIndex = selectedColumnIndex
+                        )
+                    }
+                }
             }
         }
     }
 
-    private fun unsetAffectedSquare(
+    private fun alterAffectedSquare(
         selectedRowIndex: Int,
-        selectedColumnIndex: Int
+        selectedColumnIndex: Int,
+        alterAffectedSquareOperation: AlterAffectedSquareOperation
     ) {
         val affectedRowIndexesRange = getAffectedIndexRangeInSquare(
             selectedRowOrColumnIndex = selectedRowIndex
@@ -399,19 +354,42 @@ class SolverFragment : Fragment() {
         )
         for (rowIndex in affectedRowIndexesRange.first..affectedRowIndexesRange.second) {
             for (columnIndex in
-            affectedColumnIndexesRange.first..affectedColumnIndexesRange.second
+                affectedColumnIndexesRange.first..affectedColumnIndexesRange.second
             ) {
                 if (rowIndex != selectedRowIndex && columnIndex != selectedColumnIndex) {
                     val currentRow = binding.sudokuGrid.getChildAt(rowIndex) as LinearLayout
                     val currentAffectedNumberSquare = currentRow.getChildAt(columnIndex)
                         as TextView
-                    setNotSelectedNumberSquareColor(
-                        numberSquare = currentAffectedNumberSquare,
-                        selectedRowIndex = rowIndex,
-                        selectedColumnIndex = columnIndex
-                    )
+                    when (alterAffectedSquareOperation) {
+                        AlterAffectedSquareOperation.SET_AFFECTED_SQUARE -> {
+                            setAffectedNumberSquareColor(
+                                numberSquare = currentAffectedNumberSquare,
+                                rowIndex = rowIndex,
+                                columnIndex = columnIndex
+                            )
+                        }
+                        AlterAffectedSquareOperation.UNSET_AFFECTED_SQUARE -> {
+                            setNotSelectedNumberSquareColor(
+                                numberSquare = currentAffectedNumberSquare,
+                                selectedRowIndex = rowIndex,
+                                selectedColumnIndex = columnIndex
+                            )
+                        }
+                    }
+
                 }
             }
+        }
+    }
+
+    private fun getAffectedIndexRangeInSquare(
+        selectedRowOrColumnIndex: Int,
+    ): Pair<Int, Int> {
+        return when (selectedRowOrColumnIndex) {
+            0, 1, 2 -> Pair(0, 2)
+            3, 4, 5 -> Pair(3, 5)
+            6, 7, 8 -> Pair(6, 8)
+            else -> Pair(-1, -1)
         }
     }
 

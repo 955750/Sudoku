@@ -11,3 +11,7 @@ enum class AlterAffectedColumnOperation {
 enum class AlterAffectedSquareOperation {
     SET_AFFECTED_SQUARE, UNSET_AFFECTED_SQUARE
 }
+
+enum class SquareType {
+    NORMAL_SQUARE, SQUARE_SELECTED, SQUARE_AFFECTED
+}

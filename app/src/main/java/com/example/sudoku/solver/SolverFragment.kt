@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -36,6 +37,24 @@ class SolverFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         createSudokuGrid()
+        createNumberButtons()
+
+        solverViewModel.sudokuNumberGrid.observe(viewLifecycleOwner) {
+            Log.d(TAG, "Sudoku grid changed !!")
+            if (solverViewModel.areCoordinatesInitialised()) {
+                val selectedNumberSquareCoordinates = solverViewModel
+                    .lastSelectedSquareCoordinates.value!!
+                val newNumber = it[selectedNumberSquareCoordinates
+                    .first][selectedNumberSquareCoordinates.second]
+                val selectedRow = binding.sudokuGrid.getChildAt(
+                    selectedNumberSquareCoordinates.first
+                ) as LinearLayout
+                val selectedNumberSquare = selectedRow.getChildAt(
+                    selectedNumberSquareCoordinates.second
+                ) as TextView
+                selectedNumberSquare.text = newNumber.toString()
+            }
+        }
     }
 
     private fun createSudokuGrid() {
@@ -52,8 +71,13 @@ class SolverFragment : Fragment() {
                     binding.sudokuGrid,
                     false
                 ) as TextView
-                numberSquare.text = solverViewModel.sudokuNumberGrid[rowIndex][columnIndex]
-                    .toString()
+                if (solverViewModel.sudokuNumberGrid.value != null) {
+                    val currentNumber = solverViewModel.sudokuNumberGrid
+                        .value!![rowIndex][columnIndex]
+                    if (currentNumber != -1) {
+                        numberSquare.text = currentNumber.toString()
+                    }
+                }
                 numberSquare.setOnClickListener {
                     onSquareClicked(
                         selectedSquareInstance = it as TextView,
@@ -68,6 +92,21 @@ class SolverFragment : Fragment() {
                 )
                 sudokuRow.addView(numberSquare)
             }
+        }
+    }
+
+    private fun createNumberButtons() {
+        for (numberIndex in 1..9) {
+            val numberTextView = layoutInflater.inflate(
+                R.layout.numbers_pane_text_view_layout,
+                binding.numbersPaneLayout,
+                false
+            ) as TextView
+            numberTextView.text = numberIndex.toString()
+            numberTextView.setOnClickListener {
+                alterSelectedNumberSquareContent(numberIndex)
+            }
+            binding.numbersPaneLayout.addView(numberTextView)
         }
     }
 
@@ -131,7 +170,8 @@ class SolverFragment : Fragment() {
             1, 2, 4, 5, 7 -> {
                 when (selectedRowIndex) {
                     0, 3, 6 -> numberSquare.background = ContextCompat
-                        .getDrawable(requireContext(), R.drawable.num_sq_top__middle_right_bg_selected)
+                        .getDrawable(requireContext(),
+                            R.drawable.num_sq_top__middle_right_bg_selected)
                     1, 2, 4, 5, 7 -> numberSquare.background = ContextCompat
                         .getDrawable(requireContext(),
                             R.drawable.num_sq_middle_col__right_col_bg_selected)
@@ -390,6 +430,23 @@ class SolverFragment : Fragment() {
             3, 4, 5 -> Pair(3, 5)
             6, 7, 8 -> Pair(6, 8)
             else -> Pair(-1, -1)
+        }
+    }
+
+    private fun alterSelectedNumberSquareContent(newNumber: Int) {
+        val selectedNumberSquareCoordinates = solverViewModel.lastSelectedSquareCoordinates.value!!
+        if (solverViewModel.areCoordinatesInitialised()) {
+            solverViewModel.updateSudokuNumberGrid(
+                rowIndex = selectedNumberSquareCoordinates.first,
+                columnIndex = selectedNumberSquareCoordinates.second,
+                newNumber = newNumber
+            )
+        } else {
+            Toast.makeText(
+                requireContext(),
+                "No se ha pulsado ninguna casilla",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 

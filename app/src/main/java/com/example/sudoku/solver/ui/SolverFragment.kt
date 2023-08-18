@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.sudoku.R
@@ -52,7 +53,7 @@ class SolverFragment : Fragment() {
                 val selectedNumberSquare = selectedRow.getChildAt(
                     selectedNumberSquareCoordinates.second
                 ) as TextView
-                setValueToNumberSquare(
+                setValueAndFormatToNumberSquare(
                     numberSquare = selectedNumberSquare,
                     value = newNumber
                 )
@@ -77,7 +78,7 @@ class SolverFragment : Fragment() {
                 if (solverViewModel.sudokuNumberGrid.value != null) {
                     val currentNumber = solverViewModel.sudokuNumberGrid
                         .value!![rowIndex][columnIndex]
-                    setValueToNumberSquare(
+                    setValueAndFormatToNumberSquare(
                         numberSquare = numberSquare,
                         value = currentNumber
                     )
@@ -101,13 +102,17 @@ class SolverFragment : Fragment() {
         }
     }
 
-    private fun setValueToNumberSquare(
+    private fun setValueAndFormatToNumberSquare(
         numberSquare: TextView,
         value: Int
     ) {
         if (solverViewModel.sudokuNumberGrid.value != null) {
             if (value != -1) {
                 numberSquare.text = value.toString()
+            } else {
+                numberSquare.setTextColor(
+                    ContextCompat.getColor(requireContext(), R.color.purple_500)
+                )
             }
         }
     }

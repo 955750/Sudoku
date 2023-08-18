@@ -1,4 +1,4 @@
-package com.example.sudoku.solver
+package com.example.sudoku.solver.ui
 
 enum class AlterAffectedRowOperation {
     SET_AFFECTED_ROW, UNSET_AFFECTED_ROW

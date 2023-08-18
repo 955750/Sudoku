@@ -1,4 +1,4 @@
-package com.example.sudoku.solver
+package com.example.sudoku.solver.ui
 
 import android.os.Bundle
 import android.util.Log
@@ -12,8 +12,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.sudoku.R
 import com.example.sudoku.databinding.FragmentSolverBinding
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class SolverFragment : Fragment() {
 
     private lateinit var binding: FragmentSolverBinding
@@ -37,6 +38,7 @@ class SolverFragment : Fragment() {
 
         createSudokuGrid()
         createNumberButtons()
+        setupNextClueButton()
 
         solverViewModel.sudokuNumberGrid.observe(viewLifecycleOwner) {
             if (solverViewModel.areCoordinatesInitialised()) {
@@ -80,8 +82,8 @@ class SolverFragment : Fragment() {
                         value = currentNumber
                     )
                 }
-                numberSquare.background = NumberSquareBackgroundFactory
-                    .createDrawableFromSquareTypeAndCoordinates(
+                numberSquare.background =
+                    NumberSquareBackgroundFactory.createDrawableFromSquareTypeAndCoordinates(
                         squareType = SquareType.NORMAL_SQUARE,
                         rowIndex = rowIndex,
                         columnIndex = columnIndex,
@@ -124,8 +126,8 @@ class SolverFragment : Fragment() {
             val lastSelectedSquare = lastSelectedRow.getChildAt(
                 previousSelectedSquareCoordinates.second
             ) as TextView
-            lastSelectedSquare.background = NumberSquareBackgroundFactory
-                .createDrawableFromSquareTypeAndCoordinates(
+            lastSelectedSquare.background =
+                NumberSquareBackgroundFactory.createDrawableFromSquareTypeAndCoordinates(
                     squareType = SquareType.NORMAL_SQUARE,
                     rowIndex = previousSelectedSquareCoordinates.first,
                     columnIndex = previousSelectedSquareCoordinates.second,
@@ -136,8 +138,8 @@ class SolverFragment : Fragment() {
                 selectedColumnIndex = previousSelectedSquareCoordinates.second
             )
         }
-        selectedSquareInstance.background = NumberSquareBackgroundFactory
-            .createDrawableFromSquareTypeAndCoordinates(
+        selectedSquareInstance.background =
+            NumberSquareBackgroundFactory.createDrawableFromSquareTypeAndCoordinates(
                 squareType = SquareType.SQUARE_SELECTED,
                 rowIndex = selectedRowIndex,
                 columnIndex = selectedColumnIndex,
@@ -209,8 +211,8 @@ class SolverFragment : Fragment() {
                     AlterAffectedRowOperation.SET_AFFECTED_ROW -> SquareType.SQUARE_AFFECTED
                     AlterAffectedRowOperation.UNSET_AFFECTED_ROW -> SquareType.NORMAL_SQUARE
                 }
-                currentAffectedNumberSquare.background = NumberSquareBackgroundFactory
-                    .createDrawableFromSquareTypeAndCoordinates(
+                currentAffectedNumberSquare.background =
+                    NumberSquareBackgroundFactory.createDrawableFromSquareTypeAndCoordinates(
                         squareType = squareType,
                         rowIndex = selectedRowIndex,
                         columnIndex = columnIndex,
@@ -234,8 +236,8 @@ class SolverFragment : Fragment() {
                     AlterAffectedColumnOperation.SET_AFFECTED_COLUMN -> SquareType.SQUARE_AFFECTED
                     AlterAffectedColumnOperation.UNSET_AFFECTED_COLUMN -> SquareType.NORMAL_SQUARE
                 }
-                currentAffectedNumberSquare.background = NumberSquareBackgroundFactory
-                    .createDrawableFromSquareTypeAndCoordinates(
+                currentAffectedNumberSquare.background =
+                    NumberSquareBackgroundFactory.createDrawableFromSquareTypeAndCoordinates(
                         squareType = squareType,
                         rowIndex = rowIndex,
                         columnIndex = selectedColumnIndex,
@@ -265,13 +267,11 @@ class SolverFragment : Fragment() {
                     val currentAffectedNumberSquare = currentRow.getChildAt(columnIndex)
                         as TextView
                     val squareType = when (alterAffectedSquareOperation) {
-                        AlterAffectedSquareOperation.SET_AFFECTED_SQUARE -> SquareType
-                            .SQUARE_AFFECTED
-                        AlterAffectedSquareOperation.UNSET_AFFECTED_SQUARE -> SquareType
-                            .NORMAL_SQUARE
+                        AlterAffectedSquareOperation.SET_AFFECTED_SQUARE -> SquareType.SQUARE_AFFECTED
+                        AlterAffectedSquareOperation.UNSET_AFFECTED_SQUARE -> SquareType.NORMAL_SQUARE
                     }
-                    currentAffectedNumberSquare.background = NumberSquareBackgroundFactory
-                        .createDrawableFromSquareTypeAndCoordinates(
+                    currentAffectedNumberSquare.background =
+                        NumberSquareBackgroundFactory.createDrawableFromSquareTypeAndCoordinates(
                             squareType = squareType,
                             rowIndex = rowIndex,
                             columnIndex = columnIndex,
@@ -320,6 +320,17 @@ class SolverFragment : Fragment() {
             Toast.makeText(
                 requireContext(),
                 "No se ha pulsado ninguna casilla",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
+    private fun setupNextClueButton() {
+        binding.nextClueButton.setOnClickListener {
+            val nextPlayData = solverViewModel.getNextPlayData()
+            Toast.makeText(
+                requireContext(),
+                "$nextPlayData",
                 Toast.LENGTH_SHORT
             ).show()
         }

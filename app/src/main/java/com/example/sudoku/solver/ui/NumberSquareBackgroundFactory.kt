@@ -1,4 +1,4 @@
-package com.example.sudoku.solver
+package com.example.sudoku.solver.ui
 
 import android.content.Context
 import android.graphics.drawable.Drawable

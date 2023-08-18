@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/solverFragment"
-        android:name="com.example.sudoku.solver.SolverFragment"
+        android:name="com.example.sudoku.solver.ui.SolverFragment"
         android:label="SolverFragment"
         tools:layout="@layout/fragment_solver" />
 

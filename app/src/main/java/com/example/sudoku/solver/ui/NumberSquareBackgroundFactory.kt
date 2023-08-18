@@ -20,43 +20,59 @@ class NumberSquareBackgroundFactory {
                         0, 3, 6 ->
                             when (rowIndex) {
                                 0, 3, 6 -> ContextCompat
-                                    .getDrawable(context, R.drawable.num_sq_top_left_bg)
+                                    .getDrawable(
+                                        context,
+                                        R.drawable.num_sq_border__black_top_left_bg
+                                    )
                                 1, 2, 4, 5, 7 -> ContextCompat
                                     .getDrawable(
                                         context,
-                                        R.drawable.num_sq_middle_col__right_col__top_bg
+                                        R.drawable.num_sq_border__black_left__grey_top_bg
                                     )
                                 8 -> ContextCompat
-                                    .getDrawable(context, R.drawable.num_sq_bottom_left_bg)
+                                    .getDrawable(
+                                        context,
+                                        R.drawable.num_sq_border__black_left_bottom__grey_top_bg
+                                    )
                                 else -> null
                             }
                         1, 2, 4, 5, 7 ->
                             when (rowIndex) {
                                 0, 3, 6 -> ContextCompat
-                                    .getDrawable(context, R.drawable.num_sq_top__middle_right_bg)
+                                    .getDrawable(
+                                        context,
+                                        R.drawable.num_sq_border__black_top__grey_left_bg
+                                    )
                                 1, 2, 4, 5, 7 -> ContextCompat
                                     .getDrawable(
                                         context,
-                                        R.drawable.num_sq_middle_col__right_col_bg
+                                        R.drawable.num_sq_border__grey_top_left_bg
                                     )
                                 8 -> ContextCompat
                                     .getDrawable(
                                         context,
-                                        R.drawable.num_sq_middle_col__right_col__bottom_bg
+                                        R.drawable.num_sq_border__black_bottom__grey_top_left_bg
                                     )
                                 else -> null
                             }
                         8 -> {
                             when (rowIndex) {
                                 0, 3, 6 -> ContextCompat
-                                    .getDrawable(context, R.drawable.num_sq_top_right_bg)
+                                    .getDrawable(
+                                        context,
+                                        R.drawable.num_sq_border__black_top_right__grey_left_bg
+                                    )
                                 1, 2, 4, 5, 7 -> ContextCompat
                                     .getDrawable(
                                         context,
-                                        R.drawable.num_sq_middle_col__right_col_right_bg
+                                        R.drawable.num_sq_border__black_right__grey_top_left_bg
                                     )
                                 8 -> ContextCompat
-                                    .getDrawable(context, R.drawable.num_sq_bottom_right_bg)
+                                    .getDrawable(
+                                        context,
+                                        R.drawable
+                                            .num_sq_border__black_bottom_right__grey_top_left_bg
+                                    )
                                 else -> null
                             }
                         }
@@ -68,14 +84,21 @@ class NumberSquareBackgroundFactory {
                         0, 3, 6 ->
                             when (rowIndex) {
                                 0, 3, 6 -> ContextCompat
-                                    .getDrawable(context, R.drawable.num_sq_top_left_bg_selected)
+                                    .getDrawable(
+                                        context,
+                                        R.drawable.num_sq_border__black_top_left_bg_selected
+                                    )
                                 1, 2, 4, 5, 7 -> ContextCompat
                                     .getDrawable(
                                         context,
-                                        R.drawable.num_sq_middle_col__right_col__top_bg_selected
+                                        R.drawable.num_sq_border__black_left__grey_top_bg_selected
                                     )
                                 8 -> ContextCompat
-                                    .getDrawable(context, R.drawable.num_sq_bottom_left_bg_selected)
+                                    .getDrawable(
+                                        context,
+                                        R.drawable
+                                            .num_sq_border__black_left_bottom__grey_top_bg_selected
+                                    )
                                 else -> null
                             }
                         1, 2, 4, 5, 7 ->
@@ -83,31 +106,41 @@ class NumberSquareBackgroundFactory {
                                 0, 3, 6 -> ContextCompat
                                     .getDrawable(
                                         context,
-                                        R.drawable.num_sq_top__middle_right_bg_selected
+                                        R.drawable.num_sq_border__black_top__grey_left_bg_selected
                                     )
                                 1, 2, 4, 5, 7 -> ContextCompat
                                     .getDrawable(
                                         context,
-                                        R.drawable.num_sq_middle_col__right_col_bg_selected
+                                        R.drawable.num_sq_border__grey_top_left_bg_selected
                                     )
                                 8 -> ContextCompat
                                     .getDrawable(
                                         context,
-                                        R.drawable.num_sq_middle_col__right_col__bottom_bg_selected
+                                        R.drawable
+                                            .num_sq_border__black_bottom__grey_top_left_bg_selected
                                     )
                                 else -> null
                             }
                         8 -> {
                             when (rowIndex) {
                                 0, 3, 6 -> ContextCompat
-                                    .getDrawable(context, R.drawable.num_sq_top_right_bg_selected)
+                                    .getDrawable(
+                                        context,
+                                        R.drawable
+                                            .num_sq_border__black_top_right__grey_left_bg_selected
+                                    )
                                 1, 2, 4, 5, 7 -> ContextCompat
                                     .getDrawable(
                                         context,
-                                        R.drawable.num_sq_middle_col__right_col_right_bg_selected
+                                        R.drawable
+                                            .num_sq_border__black_right__grey_top_left_bg_selected
                                     )
                                 8 -> ContextCompat
-                                    .getDrawable(context, R.drawable.num_sq_bottom_right_bg_selected)
+                                    .getDrawable(
+                                        context,
+                                        R.drawable
+                                            .num_sq_border__black_bottom_right__grey_top_left_bg_selected
+                                    )
                                 else -> null
                             }
                         }
@@ -118,35 +151,63 @@ class NumberSquareBackgroundFactory {
                         0, 3, 6 ->
                             when (rowIndex) {
                                 0, 3, 6 -> ContextCompat
-                                    .getDrawable(context, R.drawable.num_sq_top_left_bg_affected)
+                                    .getDrawable(
+                                        context,
+                                        R.drawable.num_sq_border__black_top_left_bg_affected
+                                    )
                                 1, 2, 4, 5, 7 -> ContextCompat
-                                    .getDrawable(context,
-                                        R.drawable.num_sq_middle_col__right_col__top_bg_affected)
+                                    .getDrawable(
+                                        context,
+                                        R.drawable.num_sq_border__black_left__grey_top_bg_affected
+                                    )
                                 8 -> ContextCompat
-                                    .getDrawable(context, R.drawable.num_sq_bottom_left_bg_affected)
+                                    .getDrawable(
+                                        context,
+                                        R.drawable
+                                            .num_sq_border__black_left_bottom__grey_top_bg_affected
+                                    )
                                 else -> null
                             }
                         1, 2, 4, 5, 7 ->
                             when (rowIndex) {
                                 0, 3, 6 -> ContextCompat
-                                    .getDrawable(context, R.drawable.num_sq_top__middle_right_bg_affected)
+                                    .getDrawable(
+                                        context,
+                                        R.drawable.num_sq_border__black_top__grey_left_bg_affected
+                                    )
                                 1, 2, 4, 5, 7 -> ContextCompat
-                                    .getDrawable(context,
-                                        R.drawable.num_sq_middle_col__right_col_bg_affected)
+                                    .getDrawable(
+                                        context,
+                                        R.drawable.num_sq_border__grey_top_left_bg_affected
+                                    )
                                 8 -> ContextCompat
-                                    .getDrawable(context,
-                                        R.drawable.num_sq_middle_col__right_col__bottom_bg_affected)
+                                    .getDrawable(
+                                        context,
+                                        R.drawable
+                                            .num_sq_border__black_bottom__grey_top_left_bg_affected
+                                    )
                                 else -> null
                             }
                         8 -> {
                             when (rowIndex) {
                                 0, 3, 6 -> ContextCompat
-                                    .getDrawable(context, R.drawable.num_sq_top_right_bg_affected)
+                                    .getDrawable(
+                                        context,
+                                        R.drawable
+                                            .num_sq_border__black_top_right__grey_left_bg_affected
+                                    )
                                 1, 2, 4, 5, 7 -> ContextCompat
-                                    .getDrawable(context,
-                                        R.drawable.num_sq_middle_col__right_col_right_bg_affected)
+                                    .getDrawable(
+                                        context,
+                                        R.drawable
+                                            .num_sq_border__black_right__grey_top_left_bg_affected
+                                    )
                                 8 -> ContextCompat
-                                    .getDrawable(context, R.drawable.num_sq_bottom_right_bg_affected)
+                                    .getDrawable(
+                                        context,
+                                        R.drawable
+                                            .num_sq_border__black_bottom_right__grey_top_left_bg_affected
+                                    )
                                 else -> null
                             }
                         }

@@ -55,7 +55,7 @@ class NumberSquareBackgroundFactory {
                                     )
                                 else -> null
                             }
-                        8 -> {
+                        8 ->
                             when (rowIndex) {
                                 0, 3, 6 -> ContextCompat
                                     .getDrawable(
@@ -75,11 +75,10 @@ class NumberSquareBackgroundFactory {
                                     )
                                 else -> null
                             }
-                        }
                         else -> null
                     }
                 }
-                SquareType.SQUARE_SELECTED ->
+                SquareType.SELECTED_SQUARE ->
                     when (columnIndex) {
                         0, 3, 6 ->
                             when (rowIndex) {
@@ -121,7 +120,7 @@ class NumberSquareBackgroundFactory {
                                     )
                                 else -> null
                             }
-                        8 -> {
+                        8 ->
                             when (rowIndex) {
                                 0, 3, 6 -> ContextCompat
                                     .getDrawable(
@@ -143,10 +142,9 @@ class NumberSquareBackgroundFactory {
                                     )
                                 else -> null
                             }
-                        }
                         else -> null
                     }
-                SquareType.SQUARE_AFFECTED ->
+                SquareType.AFFECTED_SQUARE ->
                     when (columnIndex) {
                         0, 3, 6 ->
                             when (rowIndex) {
@@ -188,29 +186,122 @@ class NumberSquareBackgroundFactory {
                                     )
                                 else -> null
                             }
-                        8 -> {
+                        8 ->
                             when (rowIndex) {
-                                0, 3, 6 -> ContextCompat
-                                    .getDrawable(
+                                0, 3, 6 -> ContextCompat.getDrawable(
                                         context,
                                         R.drawable
                                             .num_sq_border__black_top_right__grey_left_bg_affected
-                                    )
+                                )
                                 1, 2, 4, 5, 7 -> ContextCompat
                                     .getDrawable(
                                         context,
                                         R.drawable
                                             .num_sq_border__black_right__grey_top_left_bg_affected
                                     )
-                                8 -> ContextCompat
-                                    .getDrawable(
+                                8 -> ContextCompat.getDrawable(
                                         context,
                                         R.drawable
                                             .num_sq_border__black_bottom_right__grey_top_left_bg_affected
                                     )
                                 else -> null
                             }
-                        }
+                        else -> null
+                    }
+                SquareType.ROW_CLUE_SQUARE_TOP ->
+                    when (columnIndex) {
+                        0 -> ContextCompat.getDrawable(
+                            context,
+                            R.drawable.num_sq_border__darkblue_top_left_bg
+                        )
+                        1, 2, 4, 5, 7 -> ContextCompat.getDrawable(
+                            context,
+                            R.drawable.num_sq_border__darkblue_top__grey_left_bg
+                        )
+                        3, 6 -> ContextCompat.getDrawable(
+                            context,
+                            R.drawable.num_sq_border__darkblue_top__black_left_bg
+                        )
+                        8 -> ContextCompat.getDrawable(
+                            context,
+                            R.drawable.num_sq_border__darkblue_top_right__grey_left_bg
+                        )
+                        else -> null
+                    }
+                SquareType.ROW_CLUE_SQUARE_BOTTOM ->
+                    when (columnIndex) {
+                        0, 3, 6 -> ContextCompat.getDrawable(
+                            context,
+                            R.drawable.num_sq_border__darkblue_top__black_left_bg
+                        )
+                        1, 2, 4, 5, 7 -> ContextCompat.getDrawable(
+                            context,
+                            R.drawable.num_sq_border__darkblue_top__grey_left_bg
+                        )
+                        8 -> ContextCompat.getDrawable(
+                            context,
+                            R.drawable.num_sq_border__darkblue_top__grey_left__black_right_bg
+                        )
+                        else -> null
+                    }
+                SquareType.ROW_CLUE_SQUARE_LAST_ROW ->
+                    when (columnIndex) {
+                        0 -> ContextCompat.getDrawable(
+                            context,
+                            R.drawable.num_sq_border__darkblue_top_bottom_left_bg
+                        )
+                        1, 2, 4, 5, 7 -> ContextCompat.getDrawable(
+                            context,
+                            R.drawable.num_sq_border__darkblue_top_bottom__grey_left_bg
+                        )
+                        3, 6 -> ContextCompat.getDrawable(
+                            context,
+                            R.drawable.num_sq_border__darkblue_top_bottom__black_left_bg
+                        )
+                        8 -> ContextCompat.getDrawable(
+                            context,
+                            R.drawable.num_sq_border__darkblue_top_bottom_right__grey_left_bg
+                        )
+                        else -> null
+                    }
+                SquareType.HIGHLIGHTED_ORANGE_SQUARE_TOP ->
+                    when (columnIndex) {
+                        0 -> ContextCompat.getDrawable(
+                            context,
+                            R.drawable.num_sq_border__darkblue_top_left_bg__orange_highlighted
+                        )
+                        1, 2, 4, 5, 7 -> ContextCompat.getDrawable(
+                            context,
+                            R.drawable.num_sq_border__darkblue_top__grey_left_bg__orange_highlighted
+                        )
+                        3, 6 -> ContextCompat.getDrawable(
+                            context,
+                            R.drawable.num_sq_border__darkblue_top__black_left_bg__orange_highlighted
+                        )
+                        8 -> ContextCompat.getDrawable(
+                            context,
+                            R.drawable.num_sq_border__darkblue_top_right__grey_left_bg__orange_highlighted
+                        )
+                        else -> null
+                    }
+                SquareType.HIGHLIGHTED_ORANGE_SQUARE_LAST_ROW ->
+                    when (columnIndex) {
+                        0 -> ContextCompat.getDrawable(
+                            context,
+                            R.drawable.num_sq_border__darkblue_top_bottom_left_bg__orange_highlighted
+                        )
+                        1, 2, 4, 5, 7 -> ContextCompat.getDrawable(
+                            context,
+                            R.drawable.num_sq_border__darkblue_top_bottom__grey_left_bg__orange_highlighted
+                        )
+                        3, 6 -> ContextCompat.getDrawable(
+                            context,
+                            R.drawable.num_sq_border__darkblue_top_bottom__black_left_bg__orange_highlighted
+                        )
+                        8 -> ContextCompat.getDrawable(
+                            context,
+                            R.drawable.num_sq_border__darkblue_top_bottom_right__grey_left_bg__orange_highlighted
+                        )
                         else -> null
                     }
             }

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="black_border_width">3dp</dimen>
+    <dimen name="dark_blue_border_width">5dp</dimen>
+    <dimen name="grey_border_width">2dp</dimen>
+</resources>

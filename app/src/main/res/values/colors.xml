@@ -11,4 +11,6 @@
     <color name="light_grey">#DAD8D8</color>
     <color name="affected_light_blue">#BDECFF</color>
     <color name="selected_light_blue">#61D1FF</color>
+    <color name="clue_dark_blue">#00207C</color>
+    <color name="clue_highlight_orange">#F39949</color>
 </resources>

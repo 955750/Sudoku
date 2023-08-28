@@ -84,6 +84,10 @@ class SolverViewModel @Inject constructor(
         )
     }
 
+    fun resetLastSelectedSquareCoordinates() {
+        _lastSelectedLastSquareCoordinates.value = Pair(-1, -1)
+    }
+
     fun areCoordinatesInitialised(): Boolean {
         if (_lastSelectedLastSquareCoordinates.value != null)
             return _lastSelectedLastSquareCoordinates.value?.first != -1 &&
@@ -99,7 +103,7 @@ class SolverViewModel @Inject constructor(
         }
         newSudokuGrid[rowIndex][columnIndex] = newNumber
         _sudokuNumberGrid.value = newSudokuGrid
-        debugSudokuNumberGrid()
+        // debugSudokuNumberGrid()
     }
 
     private fun debugSudokuNumberGrid() {

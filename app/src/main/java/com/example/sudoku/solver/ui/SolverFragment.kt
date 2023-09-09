@@ -51,12 +51,6 @@ class SolverFragment : Fragment() {
                     rowIndex = selectedNumberSquareCoordinates.first,
                     columnIndex = selectedNumberSquareCoordinates.second
                 )
-                /*val selectedRow = binding.sudokuGrid.getChildAt(
-                    selectedNumberSquareCoordinates.first
-                ) as LinearLayout
-                val selectedNumberSquare = selectedRow.getChildAt(
-                    selectedNumberSquareCoordinates.second
-                ) as TextView*/
                 setValueAndFormatToNumberSquare(
                     numberSquare = selectedNumberSquare,
                     value = newNumber
@@ -87,28 +81,11 @@ class SolverFragment : Fragment() {
                     binding.sudokuGrid,
                     false
                 ) as TextView
-                if (solverViewModel.sudokuNumberGrid.value != null) {
-                    val currentNumber = solverViewModel.sudokuNumberGrid
-                        .value!![rowIndex][columnIndex]
-                    setValueAndFormatToNumberSquare(
-                        numberSquare = numberSquare,
-                        value = currentNumber
-                    )
-                }
-                numberSquare.background =
-                    NumberSquareBackgroundFactory.createDrawableFromSquareTypeAndCoordinates(
-                        squareType = SquareType.NORMAL_SQUARE,
-                        rowIndex = rowIndex,
-                        columnIndex = columnIndex,
-                        context = requireContext()
-                    )
-                numberSquare.setOnClickListener {
-                    onSquareClicked(
-                        selectedSquareInstance = it as TextView,
-                        selectedRowIndex = rowIndex,
-                        selectedColumnIndex = columnIndex
-                    )
-                }
+                setupNumberSquare(
+                    numberSquare = numberSquare,
+                    rowIndex = rowIndex,
+                    columnIndex = columnIndex
+                )
                 sudokuRow.addView(numberSquare)
             }
         }
@@ -119,39 +96,54 @@ class SolverFragment : Fragment() {
         value: Int
     ) {
         if (solverViewModel.sudokuNumberGrid.value != null) {
-            if (value != -1) {
-                numberSquare.text = value.toString()
-            } else {
+            if (value == SolverConstants.NOT_A_NUMBER_VALUE) {
                 numberSquare.setTextColor(
                     ContextCompat.getColor(requireContext(), R.color.purple_500)
                 )
+            } else {
+                numberSquare.text = value.toString()
             }
         }
     }
 
+    private fun setupNumberSquare(
+        numberSquare: TextView,
+        rowIndex: Int,
+        columnIndex: Int
+    ) {
+        if (solverViewModel.sudokuNumberGrid.value != null) {
+            val currentNumber = solverViewModel.sudokuNumberGrid
+                .value!![rowIndex][columnIndex]
+            setValueAndFormatToNumberSquare(
+                numberSquare = numberSquare,
+                value = currentNumber
+            )
+        }
+        numberSquare.background =
+            NumberSquareBackgroundFactory.createDrawableFromSquareTypeAndCoordinates(
+                squareType = SquareType.NORMAL_SQUARE,
+                rowIndex = rowIndex,
+                columnIndex = columnIndex,
+                context = requireContext()
+            )
+        numberSquare.setOnClickListener {
+            onSquareClicked(
+                selectedRowIndex = rowIndex,
+                selectedColumnIndex = columnIndex
+            )
+        }
+    }
+
     private fun onSquareClicked(
-        selectedSquareInstance: TextView,
         selectedRowIndex: Int,
         selectedColumnIndex: Int
     ) {
-        if (solverViewModel.areCoordinatesInitialised()) {
-            val previousSelectedSquareCoordinates = solverViewModel
-                .lastSelectedSquareCoordinates.value!!
-            resetSelectedSquareBackground(
-                previousSelectedSquareCoordinates = previousSelectedSquareCoordinates
-            )
-            unsetAffectedNumberSquaresColor(
-                selectedRowIndex = previousSelectedSquareCoordinates.first,
-                selectedColumnIndex = previousSelectedSquareCoordinates.second
-            )
-        }
-        selectedSquareInstance.background =
-            NumberSquareBackgroundFactory.createDrawableFromSquareTypeAndCoordinates(
-                squareType = SquareType.SELECTED_SQUARE,
-                rowIndex = selectedRowIndex,
-                columnIndex = selectedColumnIndex,
-                context = requireContext()
-            )
+        solverViewModel.setClueRecentlyAsked(false)
+        resetPreviouslyAffectedSquaresBackground()
+        setSelectedSquareBackground(
+            rowIndex = selectedRowIndex,
+            columnIndex = selectedColumnIndex
+        )
         setAffectedNumberSquaresColor(
             selectedRowIndex = selectedRowIndex,
             selectedColumnIndex = selectedColumnIndex
@@ -166,17 +158,38 @@ class SolverFragment : Fragment() {
     private fun resetSelectedSquareBackground(
         previousSelectedSquareCoordinates: Pair<Int, Int>
     ) {
-        val lastSelectedRow = binding.sudokuGrid.getChildAt(
-            previousSelectedSquareCoordinates.first
-        ) as LinearLayout
-        val lastSelectedSquare = lastSelectedRow.getChildAt(
-            previousSelectedSquareCoordinates.second
-        ) as TextView
-        lastSelectedSquare.background =
-            NumberSquareBackgroundFactory.createDrawableFromSquareTypeAndCoordinates(
-                squareType = SquareType.NORMAL_SQUARE,
-                rowIndex = previousSelectedSquareCoordinates.first,
-                columnIndex = previousSelectedSquareCoordinates.second,
+        alterNumberSquareBackground(
+            rowIndex = previousSelectedSquareCoordinates.first,
+            columnIndex = previousSelectedSquareCoordinates.second,
+            squareType = SquareType.NORMAL_SQUARE
+        )
+    }
+
+    private fun setSelectedSquareBackground(
+        rowIndex: Int,
+        columnIndex: Int
+    ) {
+        alterNumberSquareBackground(
+            rowIndex = rowIndex,
+            columnIndex = columnIndex,
+            squareType = SquareType.SELECTED_SQUARE
+        )
+    }
+
+    private fun alterNumberSquareBackground(
+        rowIndex: Int,
+        columnIndex: Int,
+        squareType: SquareType
+    ) {
+        val numberSquare = getNumberSquareInstanceByRowAndColumnIndexes(
+            rowIndex = rowIndex,
+            columnIndex = columnIndex
+        )
+        numberSquare.background = NumberSquareBackgroundFactory
+            .createDrawableFromSquareTypeAndCoordinates(
+                squareType = squareType,
+                rowIndex = rowIndex,
+                columnIndex = columnIndex,
                 context = requireContext()
             )
     }
@@ -188,97 +201,77 @@ class SolverFragment : Fragment() {
         alterRowBackground(
             selectedRowIndex = selectedRowIndex,
             selectedColumnIndex = selectedColumnIndex,
-            alterRowBackgroundOperation = AlterRowBackgroundOperation.SET_AFFECTED_ROW
+            squareType = SquareType.AFFECTED_SQUARE
         )
-        alterAffectedColumn(
+        alterColumnBackground(
             selectedRowIndex = selectedRowIndex,
             selectedColumnIndex = selectedColumnIndex,
-            alterAffectedColumnOperation = AlterAffectedColumnOperation.SET_AFFECTED_COLUMN
+            squareType = SquareType.AFFECTED_SQUARE
         )
-        alterAffectedSquare(
+        alterSquareBackground(
             selectedRowIndex = selectedRowIndex,
             selectedColumnIndex = selectedColumnIndex,
-            alterAffectedSquareOperation = AlterAffectedSquareOperation.SET_AFFECTED_SQUARE
+            squareType = SquareType.AFFECTED_SQUARE
         )
     }
 
-    private fun unsetAffectedNumberSquaresColor(
+    private fun resetAffectedNumberSquaresColor(
         selectedRowIndex: Int,
         selectedColumnIndex: Int
     ) {
         alterRowBackground(
             selectedRowIndex = selectedRowIndex,
             selectedColumnIndex = selectedColumnIndex,
-            alterRowBackgroundOperation = AlterRowBackgroundOperation.UNSET_AFFECTED_ROW
+            squareType = SquareType.NORMAL_SQUARE
         )
-        alterAffectedColumn(
+        alterColumnBackground(
             selectedRowIndex = selectedRowIndex,
             selectedColumnIndex = selectedColumnIndex,
-            alterAffectedColumnOperation = AlterAffectedColumnOperation.UNSET_AFFECTED_COLUMN
+            squareType = SquareType.NORMAL_SQUARE
         )
-        alterAffectedSquare(
+        alterSquareBackground(
             selectedRowIndex = selectedRowIndex,
             selectedColumnIndex = selectedColumnIndex,
-            alterAffectedSquareOperation = AlterAffectedSquareOperation.UNSET_AFFECTED_SQUARE
+            squareType = SquareType.NORMAL_SQUARE
         )
     }
 
     private fun alterRowBackground(
         selectedRowIndex: Int,
         selectedColumnIndex: Int,
-        alterRowBackgroundOperation: AlterRowBackgroundOperation
+        squareType: SquareType
     ) {
-        val selectedRow = binding.sudokuGrid.getChildAt(selectedRowIndex) as LinearLayout
         for (columnIndex in 0..8) {
             if (columnIndex != selectedColumnIndex) {
-                val currentAffectedNumberSquare = selectedRow.getChildAt(columnIndex) as TextView
-                val squareType = when (alterRowBackgroundOperation) {
-                    AlterRowBackgroundOperation.SET_AFFECTED_ROW -> SquareType.AFFECTED_SQUARE
-                    AlterRowBackgroundOperation.UNSET_AFFECTED_ROW -> SquareType.NORMAL_SQUARE
-                    AlterRowBackgroundOperation.SET_CLUE_ROW_TOP -> SquareType.ROW_CLUE_SQUARE_TOP
-                    AlterRowBackgroundOperation.SET_CLUE_ROW_BOTTOM -> SquareType.ROW_CLUE_SQUARE_BOTTOM
-                    AlterRowBackgroundOperation.SET_LAST_CLUE_ROW -> SquareType.ROW_CLUE_SQUARE_LAST_ROW
-                }
-                currentAffectedNumberSquare.background =
-                    NumberSquareBackgroundFactory.createDrawableFromSquareTypeAndCoordinates(
-                        squareType = squareType,
-                        rowIndex = selectedRowIndex,
-                        columnIndex = columnIndex,
-                        context = requireContext()
-                    )
+                alterNumberSquareBackground(
+                    rowIndex = selectedRowIndex,
+                    columnIndex = columnIndex,
+                    squareType = squareType
+                )
             }
         }
     }
 
-    private fun alterAffectedColumn(
+    private fun alterColumnBackground(
         selectedRowIndex: Int,
         selectedColumnIndex: Int,
-        alterAffectedColumnOperation: AlterAffectedColumnOperation
+        squareType: SquareType
     ) {
         for (rowIndex in 0..8) {
             if (rowIndex != selectedRowIndex) {
-                val currentRow = binding.sudokuGrid.getChildAt(rowIndex) as LinearLayout
-                val currentAffectedNumberSquare = currentRow.getChildAt(selectedColumnIndex)
-                    as TextView
-                val squareType = when (alterAffectedColumnOperation) {
-                    AlterAffectedColumnOperation.SET_AFFECTED_COLUMN -> SquareType.AFFECTED_SQUARE
-                    AlterAffectedColumnOperation.UNSET_AFFECTED_COLUMN -> SquareType.NORMAL_SQUARE
-                }
-                currentAffectedNumberSquare.background =
-                    NumberSquareBackgroundFactory.createDrawableFromSquareTypeAndCoordinates(
-                        squareType = squareType,
-                        rowIndex = rowIndex,
-                        columnIndex = selectedColumnIndex,
-                        context = requireContext()
-                    )
+                alterNumberSquareBackground(
+                    rowIndex = rowIndex,
+                    columnIndex = selectedColumnIndex,
+                    squareType = squareType
+                )
             }
         }
     }
 
-    private fun alterAffectedSquare(
+    private fun alterSquareBackground(
         selectedRowIndex: Int,
         selectedColumnIndex: Int,
-        alterAffectedSquareOperation: AlterAffectedSquareOperation
+        squareType: SquareType
     ) {
         val affectedRowIndexesRange = getAffectedIndexRangeInSquare(
             selectedRowOrColumnIndex = selectedRowIndex
@@ -291,20 +284,11 @@ class SolverFragment : Fragment() {
                 affectedColumnIndexesRange.first..affectedColumnIndexesRange.second
             ) {
                 if (rowIndex != selectedRowIndex && columnIndex != selectedColumnIndex) {
-                    val currentRow = binding.sudokuGrid.getChildAt(rowIndex) as LinearLayout
-                    val currentAffectedNumberSquare = currentRow.getChildAt(columnIndex)
-                        as TextView
-                    val squareType = when (alterAffectedSquareOperation) {
-                        AlterAffectedSquareOperation.SET_AFFECTED_SQUARE -> SquareType.AFFECTED_SQUARE
-                        AlterAffectedSquareOperation.UNSET_AFFECTED_SQUARE -> SquareType.NORMAL_SQUARE
-                    }
-                    currentAffectedNumberSquare.background =
-                        NumberSquareBackgroundFactory.createDrawableFromSquareTypeAndCoordinates(
-                            squareType = squareType,
-                            rowIndex = rowIndex,
-                            columnIndex = columnIndex,
-                            context = requireContext()
-                        )
+                    alterNumberSquareBackground(
+                        rowIndex = rowIndex,
+                        columnIndex = columnIndex,
+                        squareType = squareType
+                    )
                 }
             }
         }
@@ -317,7 +301,7 @@ class SolverFragment : Fragment() {
             0, 1, 2 -> Pair(0, 2)
             3, 4, 5 -> Pair(3, 5)
             6, 7, 8 -> Pair(6, 8)
-            else -> Pair(-1, -1)
+            else -> Pair(SolverConstants.NOT_A_NUMBER_VALUE, SolverConstants.NOT_A_NUMBER_VALUE)
         }
     }
 
@@ -355,71 +339,30 @@ class SolverFragment : Fragment() {
 
     private fun setupNextClueButton() {
         binding.nextClueButton.setOnClickListener {
-            if (solverViewModel.areCoordinatesInitialised()) {
-                val previousSelectedSquareCoordinates = solverViewModel
-                    .lastSelectedSquareCoordinates.value!!
-                resetSelectedSquareBackground(
-                    previousSelectedSquareCoordinates = previousSelectedSquareCoordinates
-                )
-                unsetAffectedNumberSquaresColor(
-                    selectedRowIndex = previousSelectedSquareCoordinates.first,
-                    selectedColumnIndex = previousSelectedSquareCoordinates.second
-                )
-                solverViewModel.resetLastSelectedSquareCoordinates()
+            if (solverViewModel.clueRecentyAsked.value!!) {
+                resetPreviousClueSquaresBackground()
+            } else {
+                resetPreviouslyAffectedSquaresBackground()
             }
 
+            solverViewModel.setClueRecentlyAsked(true)
             val nextPlayData = solverViewModel.getNextPlayData()
-            if (nextPlayData.rowIndex == 8) {
-                alterRowBackground(
-                    selectedRowIndex = nextPlayData.rowIndex,
-                    selectedColumnIndex = nextPlayData.columnIndex,
-                    alterRowBackgroundOperation = AlterRowBackgroundOperation.SET_LAST_CLUE_ROW
-                )
-            } else {
-                alterRowBackground(
-                    selectedRowIndex = nextPlayData.rowIndex,
-                    selectedColumnIndex = nextPlayData.columnIndex,
-                    alterRowBackgroundOperation = AlterRowBackgroundOperation.SET_CLUE_ROW_TOP
-                )
-                alterRowBackground(
-                    selectedRowIndex = nextPlayData.rowIndex + 1,
-                    selectedColumnIndex = nextPlayData.columnIndex,
-                    alterRowBackgroundOperation = AlterRowBackgroundOperation.SET_CLUE_ROW_BOTTOM
-                )
+            when (nextPlayData.clueLayout) {
+                LastFreeCellClueLayout.ROW -> {
+                    setRowClueBackground(
+                        nextPlayRowIndex = nextPlayData.rowIndex,
+                        nextPlayColumnIndex = nextPlayData.columnIndex
+                    )
+                }
+                LastFreeCellClueLayout.COLUMN -> {
+                    setColumnClueBackground(
+                        nextPlayRowIndex = nextPlayData.rowIndex,
+                        nextPlayColumnIndex = nextPlayData.columnIndex
+                    )
+                }
+                LastFreeCellClueLayout.SQUARE -> {}
+                LastFreeCellClueLayout.NO_LAYOUT -> {}
             }
-            val nextPlaySquareInstance = getNumberSquareInstanceByRowAndColumnIndexes(
-                rowIndex = nextPlayData.rowIndex,
-                columnIndex = nextPlayData.columnIndex
-            )
-            if (nextPlayData.rowIndex == 8) {
-                nextPlaySquareInstance.background =
-                    NumberSquareBackgroundFactory.createDrawableFromSquareTypeAndCoordinates(
-                        squareType = SquareType.HIGHLIGHTED_ORANGE_SQUARE_LAST_ROW,
-                        rowIndex = nextPlayData.rowIndex,
-                        columnIndex = nextPlayData.columnIndex,
-                        context = requireContext()
-                    )
-            } else {
-                nextPlaySquareInstance.background =
-                    NumberSquareBackgroundFactory.createDrawableFromSquareTypeAndCoordinates(
-                        squareType = SquareType.HIGHLIGHTED_ORANGE_SQUARE_TOP,
-                        rowIndex = nextPlayData.rowIndex,
-                        columnIndex = nextPlayData.columnIndex,
-                        context = requireContext()
-                    )
-                val belowNextPlaySquareInstance = getNumberSquareInstanceByRowAndColumnIndexes(
-                    rowIndex = nextPlayData.rowIndex + 1,
-                    columnIndex = nextPlayData.columnIndex
-                )
-                belowNextPlaySquareInstance.background =
-                    NumberSquareBackgroundFactory.createDrawableFromSquareTypeAndCoordinates(
-                        squareType = SquareType.ROW_CLUE_SQUARE_BOTTOM,
-                        rowIndex = nextPlayData.rowIndex + 1,
-                        columnIndex = nextPlayData.columnIndex,
-                        context = requireContext()
-                    )
-            }
-
             solverViewModel.updateLastSelectedSquareCoordinates(
                 row = nextPlayData.rowIndex,
                 column = nextPlayData.columnIndex
@@ -430,6 +373,133 @@ class SolverFragment : Fragment() {
                 "$nextPlayData",
                 Toast.LENGTH_SHORT
             ).show()
+        }
+    }
+
+    private fun resetPreviouslyAffectedSquaresBackground() {
+        if (solverViewModel.areCoordinatesInitialised()) {
+            val previousSelectedSquareCoordinates = solverViewModel
+                .lastSelectedSquareCoordinates.value!!
+            resetSelectedSquareBackground(
+                previousSelectedSquareCoordinates = previousSelectedSquareCoordinates
+            )
+            resetAffectedNumberSquaresColor(
+                selectedRowIndex = previousSelectedSquareCoordinates.first,
+                selectedColumnIndex = previousSelectedSquareCoordinates.second
+            )
+        }
+    }
+
+    /*private fun resetPreviousClueSquaresBackground() {
+        val previousSelectedSquareCoordinates = solverViewModel
+            .lastSelectedSquareCoordinates.value!!
+        if (previousSelectedSquareCoordinates.first != 8) {
+            alterRowBackground(
+                selectedRowIndex = previousSelectedSquareCoordinates.first + 1,
+                selectedColumnIndex = previousSelectedSquareCoordinates.second,
+                squareType = SquareType.NORMAL_SQUARE
+            )
+        }
+        alterRowBackground(
+            selectedRowIndex = previousSelectedSquareCoordinates.first,
+            selectedColumnIndex = previousSelectedSquareCoordinates.second,
+            squareType = SquareType.NORMAL_SQUARE
+        )
+        alterNumberSquareBackground(
+            rowIndex = previousSelectedSquareCoordinates.first,
+            columnIndex = previousSelectedSquareCoordinates.second,
+            squareType = SquareType.NORMAL_SQUARE
+        )
+    }*/
+
+    /* PARA SIMPLIFICAR LA LÓGICA -> SE PODRÍA REFINAR/OPTIMIZAR MÁS ADELANTE */
+    private fun resetPreviousClueSquaresBackground() {
+        for (rowIndex in 0..8) {
+            for (columnIndex in 0..8) {
+                alterNumberSquareBackground(
+                    rowIndex = rowIndex,
+                    columnIndex = columnIndex,
+                    squareType = SquareType.NORMAL_SQUARE
+                )
+            }
+        }
+    }
+
+    private fun setRowClueBackground(
+        nextPlayRowIndex: Int,
+        nextPlayColumnIndex: Int
+    ) {
+        if (nextPlayRowIndex == 8) {
+            alterRowBackground(
+                selectedRowIndex = nextPlayRowIndex,
+                selectedColumnIndex = nextPlayColumnIndex,
+                squareType = SquareType.ROW_CLUE_SQUARE_LAST_ROW
+            )
+            alterNumberSquareBackground(
+                rowIndex = nextPlayRowIndex,
+                columnIndex = nextPlayColumnIndex,
+                squareType = SquareType.HIGHLIGHTED_ORANGE_SQUARE_LAST_ROW
+            )
+        } else {
+            alterRowBackground(
+                selectedRowIndex = nextPlayRowIndex,
+                selectedColumnIndex = nextPlayColumnIndex,
+                squareType = SquareType.ROW_CLUE_SQUARE_TOP
+            )
+            alterNumberSquareBackground(
+                rowIndex = nextPlayRowIndex,
+                columnIndex = nextPlayColumnIndex,
+                squareType = SquareType.HIGHLIGHTED_ORANGE_SQUARE_ROW_TOP
+            )
+            alterRowBackground(
+                selectedRowIndex = nextPlayRowIndex + 1,
+                selectedColumnIndex = nextPlayColumnIndex,
+                squareType = SquareType.ROW_CLUE_SQUARE_BOTTOM
+            )
+            alterNumberSquareBackground(
+                rowIndex = nextPlayRowIndex + 1,
+                columnIndex = nextPlayColumnIndex,
+                squareType = SquareType.ROW_CLUE_SQUARE_BOTTOM
+            )
+        }
+    }
+
+    private fun setColumnClueBackground(
+        nextPlayRowIndex: Int,
+        nextPlayColumnIndex: Int
+    ) {
+        if (nextPlayColumnIndex == 8) {
+            alterColumnBackground(
+                selectedRowIndex = nextPlayRowIndex,
+                selectedColumnIndex = nextPlayColumnIndex,
+                squareType = SquareType.COLUMN_CLUE_SQUARE_LAST_COLUMN
+            )
+            alterNumberSquareBackground(
+                rowIndex = nextPlayRowIndex,
+                columnIndex = nextPlayColumnIndex,
+                squareType = SquareType.HIGHLIGHTED_ORANGE_SQUARE_LAST_COLUMN
+            )
+        } else {
+            alterColumnBackground(
+                selectedRowIndex = nextPlayRowIndex,
+                selectedColumnIndex = nextPlayColumnIndex,
+                squareType = SquareType.COLUMN_CLUE_SQUARE_LEFT
+            )
+            alterNumberSquareBackground(
+                rowIndex = nextPlayRowIndex,
+                columnIndex = nextPlayColumnIndex,
+                squareType = SquareType.HIGHLIGHTED_ORANGE_SQUARE_COLUMN_LEFT
+            )
+            alterColumnBackground(
+                selectedRowIndex = nextPlayRowIndex,
+                selectedColumnIndex = nextPlayColumnIndex + 1,
+                squareType = SquareType.COLUMN_CLUE_SQUARE_RIGHT
+            )
+            alterNumberSquareBackground(
+                rowIndex = nextPlayRowIndex,
+                columnIndex = nextPlayColumnIndex + 1,
+                squareType = SquareType.COLUMN_CLUE_SQUARE_RIGHT
+            )
         }
     }
 

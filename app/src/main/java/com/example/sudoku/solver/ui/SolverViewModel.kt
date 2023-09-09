@@ -32,6 +32,13 @@ class SolverViewModel @Inject constructor(
     )
     val sudokuNumberGrid: LiveData<List<MutableList<Int>>> = _sudokuNumberGrid
 
+    private val _clueRecentlyAsked: MutableLiveData<Boolean> = MutableLiveData(false)
+    val clueRecentyAsked: LiveData<Boolean> = _clueRecentlyAsked
+
+    private val _lastFreeCellClueLayout: MutableLiveData<LastFreeCellClueLayout> =
+        MutableLiveData(null)
+    val lastFreeCellClueLayout = _lastFreeCellClueLayout
+
     init {
         // context = SudokuSolvingStrategyContext(LastFreeCellStrategy())
 
@@ -63,15 +70,15 @@ class SolverViewModel @Inject constructor(
 
         // Versión 3
         _sudokuNumberGrid.value = listOf(
-            mutableListOf(2, -1, 6, -1, -1, -1, 1, 9, 8),
-            mutableListOf(3, 4, 9, 8, -1, -1, 6, 2, -1),
-            mutableListOf(8, -1, -1, 9, -1, 6, 5, 4, 3),
-            mutableListOf(1, -1, -1, -1, -1, -1, -1, 7, -1),
-            mutableListOf(-1, 9, -1, -1, 3, -1, -1, -1, -1),
-            mutableListOf(7, 6, -1, -1, 1, -1, -1, -1, 5),
-            mutableListOf(-1, 2, -1, 5, -1, -1, -1, -1, 9),
-            mutableListOf(-1, -1, 5, -1, 4, 2, 7, -1, -1),
-            mutableListOf(6, 8, 3, -1, 9, 7, 4, 5, 2)
+            mutableListOf( 2, -1,  6, -1, -1, -1,  1,  9,  8),
+            mutableListOf( 3,  4,  9,  8, -1, -1,  6,  2, -1),
+            mutableListOf( 8, -1, -1,  9, -1,  6,  5,  4,  3),
+            mutableListOf( 1, -1, -1, -1, -1, -1, -1,  7,  4),
+            mutableListOf( 5,  9, -1, -1,  3, -1, -1, -1,  1),
+            mutableListOf( 7,  6, -1, -1,  1, -1, -1, -1,  5),
+            mutableListOf(-1,  2, -1,  5, -1, -1, -1, -1,  9),
+            mutableListOf( 9, -1,  5, -1,  4,  2,  7, -1, -1),
+            mutableListOf( 6,  8,  3, -1,  9,  7,  4,  5,  2)
         )
     }
 
@@ -115,7 +122,13 @@ class SolverViewModel @Inject constructor(
 
     fun getNextPlayData(): NextPlayData {
         // sudokuSolvingStrategyContext.changeStrategy(MockStrategy())
-        return sudokuSolvingStrategyContext.executeStrategy(_sudokuNumberGrid.value!!)
+        val nextPlayData = sudokuSolvingStrategyContext.executeStrategy(_sudokuNumberGrid.value!!)
+        _lastFreeCellClueLayout.value = nextPlayData.clueLayout
+        return nextPlayData
+    }
+
+    fun setClueRecentlyAsked(value: Boolean) {
+        _clueRecentlyAsked.value = value
     }
 
     companion object {
